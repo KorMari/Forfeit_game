@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void flipImage() {
         ObjectAnimator animator = ObjectAnimator.ofFloat(imageViewBack, "rotationY", 0f, 180f);
-        animator.setDuration(500);
+        animator.setDuration(400);
         animator.start();
     }
 }

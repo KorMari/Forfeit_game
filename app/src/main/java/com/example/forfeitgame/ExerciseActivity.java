@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -35,8 +36,13 @@ private ImageView imageViewFace;
             exercises = getResources().getStringArray(R.array.forfeit);
             numberOfExercise = getNumber();
         }
+        AnimatorSet set = new AnimatorSet();
+        set.setDuration(400);
+        set.playTogether(flipImage(), flipText());
+        set.start();
 
-            flipImage();
+//            flipImage();
+//        flipText();
 
 
 
@@ -50,7 +56,13 @@ private ImageView imageViewFace;
         textViewForExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                  flipImage();
+
+                AnimatorSet set = new AnimatorSet();
+                set.setDuration(400);
+                set.playTogether(flipImage(), flipText());
+                set.start();
+//                  flipImage();
+//                  flipText();
 
                 Intent intent = MainActivity.newIntent(ExerciseActivity.this);
                 startActivity(intent);
@@ -79,11 +91,22 @@ private ImageView imageViewFace;
         return random.nextInt(exercises.length);
     }
 
-    private void flipImage() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(imageViewFace, "rotationY", 0f, 180f);
-        animator.setDuration(500);
-        animator.start();
+    private Animator flipImage() {
+       return ObjectAnimator.ofFloat(imageViewFace, "rotationY", 0f, 180f);
+//
+//        ObjectAnimator animator = ObjectAnimator.ofFloat(imageViewFace, "rotationY", 0f, 180f);
+//        animator.setDuration(500);
+//        animator.start();
     }
 
+    private Animator flipText() {
+
+//        textViewForExercise.setRotationY(180f);
+       return ObjectAnimator.ofFloat(textViewForExercise, "rotationY", 0f, 180f);
+//
+//        ObjectAnimator animator = ObjectAnimator.ofFloat(textViewForExercise, "rotationY", 0f, 180f);
+//        animator.setDuration(500);
+//        animator.start();
+    }
 
 }
