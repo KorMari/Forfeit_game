@@ -3,19 +3,22 @@ package com.example.forfeitgame;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Random;
 
 public class ExerciseActivity extends AppCompatActivity {
     private TextView textViewForExercise;
-
+private ImageView imageViewFace;
     private String[] exercises;
     int numberOfExercise;
 
@@ -33,6 +36,9 @@ public class ExerciseActivity extends AppCompatActivity {
             numberOfExercise = getNumber();
         }
 
+            flipImage();
+
+
 
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // прячем панель навигации
@@ -44,9 +50,9 @@ public class ExerciseActivity extends AppCompatActivity {
         textViewForExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                  flipImage();
+
                 Intent intent = MainActivity.newIntent(ExerciseActivity.this);
-//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ExerciseActivity.this, new Pair<View, String>(textViewForExercise, "pour"));
-//                startActivity(intent, options.toBundle());
                 startActivity(intent);
             }
         });
@@ -65,11 +71,18 @@ public class ExerciseActivity extends AppCompatActivity {
 
     private void initViews() {
         textViewForExercise = findViewById(R.id.textViewForExercise);
+        imageViewFace = findViewById(R.id.imageViewFace);
     }
 
     private int getNumber() {
         Random random = new Random();
         return random.nextInt(exercises.length);
+    }
+
+    private void flipImage() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(imageViewFace, "rotationY", 0f, 180f);
+        animator.setDuration(500);
+        animator.start();
     }
 
 

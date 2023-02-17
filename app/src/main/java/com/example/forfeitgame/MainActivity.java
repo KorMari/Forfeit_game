@@ -1,21 +1,19 @@
 package com.example.forfeitgame;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
-import android.app.ActivityOptions;
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView imageViewCard;
+    private ImageView imageViewBack;
 
 
     @Override
@@ -30,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN // прячем строку состояния
                 | View.SYSTEM_UI_FLAG_IMMERSIVE
         );
+        flipImage();
 
-
-        imageViewCard.setOnClickListener(new View.OnClickListener() {
+        imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                    flipImage();
+
 
 
                 Intent intent = ExerciseActivity.newIntent(MainActivity.this);
@@ -51,12 +52,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        imageViewCard = findViewById(R.id.imageViewCard);
+        imageViewBack = findViewById(R.id.imageViewBack);
     }
 
     public static Intent newIntent(Context context) {
+
         return new Intent(context, MainActivity.class);
     }
 
-
+    private void flipImage() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(imageViewBack, "rotationY", 0f, 180f);
+        animator.setDuration(500);
+        animator.start();
+    }
 }
