@@ -13,4 +13,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/face" />
 
+    <TextView
+        android:id="@+id/textViewForExercise"
+        android:alpha="0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="16dp"
+        android:textColor="@color/yellow_text"
+        android:textSize="30sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Встать на четвереньки и изобрази автомобиль, осуществляющий задним ходом параллельную парковку в пространство между двумя стульями" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

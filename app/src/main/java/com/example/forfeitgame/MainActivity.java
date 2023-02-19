@@ -12,11 +12,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private ImageView imageViewBack;
     private ImageView ImageViewFront;
+
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +34,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("MainActivity", "onClick imageViewBack");
                 flipCard(MainActivity.this, ImageViewFront, imageViewBack);
+                // get random text from values/strings.xml and set it to textView
+                textView.setText(getResources().getStringArray(R.array.forfeit)[(int) (Math.random() * 10)]);
+                animateTextView();
             }
         });
 
         ImageViewFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                animateTextViewHide();
                 // write log
                 Log.d("MainActivity", "onClick ImageViewFront");
                 flipCard(MainActivity.this, imageViewBack, ImageViewFront);
@@ -55,11 +62,27 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         imageViewBack = findViewById(R.id.back);
         ImageViewFront = findViewById(R.id.front);
+        textView = findViewById(R.id.textViewForExercise);
     }
 
     public static Intent newIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
+
+    // function to animate appearance of the TextView
+    private void animateTextView() {
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(MainActivity.this, R.animator.text_view_animation);
+        set.setStartDelay(1000);
+        set.setTarget(textView);
+        set.start();
+    }
+
+    private void animateTextViewHide() {
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(MainActivity.this, R.animator.text_view_animation_hide);
+        set.setTarget(textView);
+        set.start();
+    }
+
 
     public void flipCard(Context context, View visibleView, View inVisibleView) {
         try {
