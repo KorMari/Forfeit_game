@@ -13,12 +13,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/face" />
 
+
     <TextView
         android:id="@+id/textViewForExercise"
         android:alpha="0"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
+        android:layout_margin="18dp"
         android:gravity="center_vertical|center_horizontal"
         android:padding="16dp"
         android:textColor="@color/yellow_text"

@@ -9,6 +9,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,22 +23,21 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageViewBack;
     private ImageView ImageViewFront;
 
+
     private TextView textViewForExercises;
     private TextView textViewEmpty;
     private Random random = new Random();
 
     private String[] exercises;
     private int numberOfExercise;
-
     private Boolean isAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.common);
+        setContentView(R.layout.activity_main);
         initViews();
-        setupWindow();
         isAnim = false;
         if (savedInstanceState != null) {
             exercises = getResources().getStringArray(R.array.forfeit);
@@ -51,12 +51,16 @@ public class MainActivity extends AppCompatActivity {
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isAnim){
+                if (!isAnim) {
+                    isAnim = true;
                     setNumberOfExercise(getRandomNumber());
                     textViewForExercises.setText(exercises[getNumberOfExercise()]);
+
                     flipCard(MainActivity.this, ImageViewFront, imageViewBack);
                     flipCard(MainActivity.this, textViewForExercises, textViewEmpty);
+                    Log.d("MainActivity", "Back click");
                 }
+
 
             }
         });
@@ -64,32 +68,25 @@ public class MainActivity extends AppCompatActivity {
         ImageViewFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isAnim){
+                if (!isAnim) {
+                    isAnim = true;
                     flipCard(MainActivity.this, imageViewBack, ImageViewFront);
                     flipCard(MainActivity.this, textViewEmpty, textViewForExercises);
+                    Log.d("MainActivity", "Front click");
                 }
+
 
             }
         });
     }
 
-    private void setupWindow() {
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide navigation panel
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide state row
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE
-        );
-    }
+
 
     private void initViews() {
         imageViewBack = findViewById(R.id.back);
         ImageViewFront = findViewById(R.id.front);
         textViewForExercises = findViewById(R.id.textViewForExercise);
         textViewEmpty = findViewById(R.id.textViewEmpty);
-    }
-
-    public static Intent newIntent(Context context) {
-        return new Intent(context, MainActivity.class);
     }
 
 
@@ -114,15 +111,15 @@ public class MainActivity extends AppCompatActivity {
             flipInAnimatorSet.start();
             flipInAnimatorSet.addListener(new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationEnd(Animator animation) {
-                    isAnim = false;
-                    inVisibleView.setVisibility(View.GONE);
-                                    }
+                public void onAnimationStart(Animator animation) {
+                    Log.d("MainActivity", "Анимация началась");
+                }
 
                 @Override
-                public void onAnimationStart(Animator animation) {
-                    super.onAnimationStart(animation);
-                    isAnim = true;
+                public void onAnimationEnd(Animator animation) {
+                    inVisibleView.setVisibility(View.GONE);
+                    Log.d("MainActivity", "Анимация закончилась");
+                    isAnim = false;
                 }
             });
         } catch (Exception e) {
@@ -146,5 +143,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void setNumberOfExercise(int numberOfExercise) {
         this.numberOfExercise = numberOfExercise;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide navigation panel
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide state row
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE
+        );
     }
 }
