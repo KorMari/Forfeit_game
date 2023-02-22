@@ -1,5 +1,6 @@
 package com.example.forfeitgame;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
@@ -14,12 +15,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
 
     private ImageView imageViewBack;
     private ImageView ImageViewFront;
 
-    private TextView textView;
+    private TextView textViewForExercises;
+    private TextView textViewEmpty;
+    private Random random = new Random();
+
+    private String[] exercises;
+    private int numberOfExercise;
+
+    private Boolean isAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,25 +38,37 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.common);
         initViews();
         setupWindow();
+        isAnim = false;
+        if (savedInstanceState != null) {
+            exercises = getResources().getStringArray(R.array.forfeit);
+            setNumberOfExercise(savedInstanceState.getInt("numberOfExercise"));
+        } else {
+            exercises = getResources().getStringArray(R.array.forfeit);
+            setNumberOfExercise(getRandomNumber());
+        }
+
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("MainActivity", "onClick imageViewBack");
-                flipCard(MainActivity.this, ImageViewFront, imageViewBack);
-                // get random text from values/strings.xml and set it to textView
-                textView.setText(getResources().getStringArray(R.array.forfeit)[(int) (Math.random() * 10)]);
-                animateTextView();
+                if (!isAnim){
+                    setNumberOfExercise(getRandomNumber());
+                    textViewForExercises.setText(exercises[getNumberOfExercise()]);
+                    flipCard(MainActivity.this, ImageViewFront, imageViewBack);
+                    flipCard(MainActivity.this, textViewForExercises, textViewEmpty);
+                }
+
             }
         });
 
         ImageViewFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                animateTextViewHide();
-                // write log
-                Log.d("MainActivity", "onClick ImageViewFront");
-                flipCard(MainActivity.this, imageViewBack, ImageViewFront);
+                if (!isAnim){
+                    flipCard(MainActivity.this, imageViewBack, ImageViewFront);
+                    flipCard(MainActivity.this, textViewEmpty, textViewForExercises);
+                }
+
             }
         });
     }
@@ -62,25 +84,12 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         imageViewBack = findViewById(R.id.back);
         ImageViewFront = findViewById(R.id.front);
-        textView = findViewById(R.id.textViewForExercise);
+        textViewForExercises = findViewById(R.id.textViewForExercise);
+        textViewEmpty = findViewById(R.id.textViewEmpty);
     }
 
     public static Intent newIntent(Context context) {
         return new Intent(context, MainActivity.class);
-    }
-
-    // function to animate appearance of the TextView
-    private void animateTextView() {
-        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(MainActivity.this, R.animator.text_view_animation);
-        set.setStartDelay(1000);
-        set.setTarget(textView);
-        set.start();
-    }
-
-    private void animateTextViewHide() {
-        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(MainActivity.this, R.animator.text_view_animation_hide);
-        set.setTarget(textView);
-        set.start();
     }
 
 
@@ -106,7 +115,14 @@ public class MainActivity extends AppCompatActivity {
             flipInAnimatorSet.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    isAnim = false;
                     inVisibleView.setVisibility(View.GONE);
+                                    }
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    isAnim = true;
                 }
             });
         } catch (Exception e) {
@@ -114,52 +130,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private int getRandomNumber() {
+        return random.nextInt(exercises.length);
+    }
 
-//    private void flipCard(Context context, View visibleView, View inVisibleView) {
-//        try {
-//            flipOutAnimatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(
-//                    context,
-//                    R.animator.flip_out
-//            );
-//
-//
-//            flipOutAnimatorSet.setTarget(inVisibleView);
-//            flipInAnimationSet = (AnimatorSet) AnimatorInflater.loadAnimator(
-//                    context,
-//                    R.animator.flip_in
-//            );
-//            flipInAnimationSet.setTarget(visibleView);
-//
-//            AnimatorSet set = new AnimatorSet();
-//            set.playTogether(flipOutAnimatorSet, flipInAnimationSet);
-//            set.start();
-//
-////            inVisibleView.setVisibility(View.GONE);
-//
-//            set.addListener(new Animator.AnimatorListener() {
-//                @Override
-//                public void onAnimationStart(@NonNull Animator animation) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(@NonNull Animator animation) {
-//                    inVisibleView.setVisibility(View.GONE);
-//                }
-//
-//                @Override
-//                public void onAnimationCancel(@NonNull Animator animation) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(@NonNull Animator animation) {
-//
-//                }
-//            });
-//        } catch (Exception e) {
-//            Log.d("MainActivity", e.getMessage());
-//        }
-//    }
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("numberOfExercise", numberOfExercise);
+    }
 
+    public int getNumberOfExercise() {
+        return numberOfExercise;
+    }
+
+    public void setNumberOfExercise(int numberOfExercise) {
+        this.numberOfExercise = numberOfExercise;
+    }
 }
