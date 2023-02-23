@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         initViews();
         isAnim = false;
@@ -55,13 +54,10 @@ public class MainActivity extends AppCompatActivity {
                     isAnim = true;
                     setNumberOfExercise(getRandomNumber());
                     textViewForExercises.setText(exercises[getNumberOfExercise()]);
-
                     flipCard(MainActivity.this, ImageViewFront, imageViewBack);
                     flipCard(MainActivity.this, textViewForExercises, textViewEmpty);
                     Log.d("MainActivity", "Back click");
                 }
-
-
             }
         });
 
@@ -74,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
                     flipCard(MainActivity.this, textViewEmpty, textViewForExercises);
                     Log.d("MainActivity", "Front click");
                 }
-
-
             }
         });
     }
@@ -148,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide navigation panel
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide state row
